@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Гуртожиток №1 ПНУ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'diia': '24px',
+                        'diia-lg': '32px'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Покращена читабельність тексту (зроблено темнішим у світлій темі) */
+        body {
+            color: #030712 !important; /* Найтемніший slate */
+        }
+        
+        .dark body {
+            color: #f1f5f9 !important; /* Наймиліший slate для contrast */
+        }
+
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        body { 
+            -webkit-tap-highlight-color: transparent; 
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1), color 0.6s ease;
+            letter-spacing: -0.01em;
+            /* Базовий колір під градієнтом для плавності */
+            background-color: #f8fafc;
+        }
+        
+                        /* Живий багатошаровий градієнт для світлої теми (світліша версія за фото) */
+        .bg-diia-light {
+            background: linear-gradient(-45deg, #fbc1c1, #ff9e9e, #b3e5fc, #c3d1ed, #f8bbd0);
+            background-size: 400% 400%;
+            animation: gradient-flow 12s ease-in-out infinite;
+        }
+        
+                        /* Живий багатошаровий градієнт для темної теми (світліша адаптація) */
+        .dark body, .dark .bg-diia-light {
+            background: linear-gradient(-45deg, #6c4246, #6c3c5b, #3d3b6a, #4a6a8c, #634d52);
+            background-size: 400% 400%;
+            animation: gradient-flow 14s ease-in-out infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Покращений Гласморфізм */
+        .diia-glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 12px 40px -10px rgba(31, 38, 135, 0.1);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, background 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .diia-glass-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 50px -10px rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        .dark .diia-glass-card {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+        }
+        
+        .dark .diia-glass-card:hover {
+            background: rgba(15, 23, 42, 0.7);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ефект бліку (Shimmer) для карток */
+        .diia-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-25deg);
+            animation: shimmer 6s infinite ease-in-out;
+            pointer-events: none;
+        }
+        .dark .diia-glass-card::before {
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
+        }
+        @keyframes shimmer {
+            0% { left: -150%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* Динамічні кнопки */
+        .btn-push {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .btn-push:hover {
+            transform: translateY(-2px);
+        }
+        .btn-push:active {
+            transform: scale(0.92) translateY(2px);
+            opacity: 0.9;
+        }
+
+        /* Плавна поява списків (Каскад) */
+        @keyframes listStaggerIn {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        
+        .cascade-item {
+            animation: listStaggerIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+        
+        /* Затримка для каскаду, якщо елементів багато */
+        .cascade-item:nth-child(1) { animation-delay: 0.05s; }
+        .cascade-item:nth-child(2) { animation-delay: 0.1s; }
+        .cascade-item:nth-child(3) { animation-delay: 0.15s; }
+        .cascade-item:nth-child(4) { animation-delay: 0.2s; }
+        .cascade-item:nth-child(5) { animation-delay: 0.25s; }
+
+        /* Перемикання вкладок */
+        @keyframes tabFadeIn {
+            0% { opacity: 0; transform: scale(0.96) translateY(12px); filter: blur(4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        .tab-content-active {
+            animation: tabFadeIn 0.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+        }
+
+        /* Модальні вікна - Spring ефект */
+        @keyframes modalFadeIn {
+            0% { opacity: 0; transform: scale(0.85) translateY(30px); filter: blur(8px); }
+            70% { transform: scale(1.03) translateY(-5px); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-modal {
+            animation: modalFadeIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Анімація кроків інструкції */
+        @keyframes stepFadeIn {
+            from { opacity: 0; transform: translateX(15px); filter: blur(3px); }
+            to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+        .step-animation {
+            animation: stepFadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Відскок іконок в меню */
+        .icon-bounce {
+            animation: iconJump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes iconJump {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.2); color: inherit; }
+        }
+        
+        /* Стилізація інпутів для більшої глибини */
+        input:focus, textarea:focus, select:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-diia-light text-slate-800 dark:text-slate-100 min-h-screen pb-32 antialiased text-[15px] font-medium leading-relaxed">
+
+    <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-full max-w-xs space-y-2 pointer-events-none px-4"></div>
+
+    <div id="modal-welcome-instruction" class="fixed inset-0 z-50 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-xl hidden flex items-center justify-center p-4 transition-all">
+        <div class="w-full max-w-sm bg-white/95 dark:bg-slate-900/95 rounded-diia p-6 shadow-2xl border border-white/40 dark:border-slate-700/50 animate-modal max-h-[90vh] flex flex-col justify-between backdrop-blur-md">
+            <div class="space-y-4">
+                <div class="text-center space-y-2">
+                    <div id="welcome-step-icon" class="w-16 h-16 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner border border-white/50 dark:border-slate-700">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <h3 id="welcome-instruction-title" class="text-[18px] font-black tracking-tight text-slate-900 dark:text-white pt-1"></h3>
+                    <div class="inline-block px-3 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold rounded-full text-[12px] shadow-sm" id="welcome-step-indicator">
+                        Крок 1 з 3
+                    </div>
+                </div>
+                
+                <div class="bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-4 min-h-[160px] flex items-center justify-center shadow-inner">
+                    <div id="welcome-instruction-content" class="text-[14px] text-slate-700 dark:text-slate-300 leading-relaxed text-center space-y-2 step-animation"></div>
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-5 border-t border-slate-200/50 dark:border-slate-800/80 mt-4">
+                <div class="flex gap-3">
+                    <button id="welcome-prev-btn" class="flex-1 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-extrabold rounded-xl text-[13px] btn-push uppercase tracking-wider border border-slate-200 shadow-sm">Назад</button>
+                    <button id="welcome-next-btn" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold rounded-xl text-[13px] btn-push shadow-lg shadow-blue-500/30 uppercase tracking-wider">Далі</button>
+                    <button id="welcome-start-btn" class="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-xl text-[13px] btn-push shadow-lg shadow-emerald-500/30 uppercase tracking-wider hidden">Розпочати 🚀</button>
+                </div>
+                <div class="text-center">
+                    <button id="welcome-skip-btn" class="text-[13px] font-bold text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors btn-push py-1">Пропустити інструкцію</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-custom-confirm" class="fixed inset-0 z-[60] bg-slate-950/60 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-xs bg-white/95 dark:bg-slate-900/95 rounded-diia p-5 shadow-2xl text-center space-y-4 border border-white/50 dark:border-slate-700 animate-modal backdrop-blur-lg">
+            <div class="w-14 h-14 bg-gradient-to-br from-rose-500/20 to-orange-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-[15px] font-black uppercase tracking-wide text-slate-900 dark:text-white">Підтвердження ⚠️</h3>
+                <p id="confirm-modal-text" class="text-[14px] text-slate-600 dark:text-slate-400">Ви дійсно хочете здійснити цю дію?</p>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button id="confirm-cancel-btn" class="flex-1 py-2.5 text-[14px] bg-slate-100 dark:bg-slate-800 rounded-xl font-bold btn-push border border-slate-200 dark:border-slate-700 shadow-sm">Скасувати</button>
+                <button id="confirm-ok-btn" class="flex-1 py-2.5 text-[14px] font-black bg-gradient-to-r from-rose-600 to-red-500 text-white rounded-xl btn-push shadow-lg shadow-rose-500/30">Так, видалити</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4 transition-all duration-400">
+        <div class="absolute top-4 right-4">
+            <button id="lightbox-close-btn" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/20 btn-push text-xl transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="w-full max-w-md p-2 bg-white/5 dark:bg-slate-900/40 rounded-diia border border-white/10 shadow-2xl overflow-hidden animate-modal">
+            <div id="lightbox-gallery" class="w-full h-auto max-h-[70vh] flex flex-col items-center justify-center">
+                <img id="lightbox-img" src="" alt="Документ" class="w-full h-auto max-h-[70vh] object-contain rounded-xl mx-auto shadow-lg">
+            </div>
+            <div id="lightbox-caption" class="text-center text-[14px] font-medium text-white/90 p-3 bg-black/50 backdrop-blur-md mt-2 rounded-xl border border-white/10"></div>
+        </div>
+    </div>
+
+    <div id="modal-confirm-logout" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-xs bg-white/95 dark:bg-slate-900/95 rounded-diia p-5 shadow-2xl text-center space-y-4 border border-white/40 dark:border-slate-700 animate-modal backdrop-blur-lg">
+            <div class="w-14 h-14 bg-gradient-to-br from-rose-500/20 to-pink-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner border border-white/50">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-[15px] font-black uppercase tracking-wider text-slate-900 dark:text-white">Вихід 🚪</h3>
+                <p class="text-[14px] text-slate-600 dark:text-slate-400">Бажаєте завершити сесію адміністратора?</p>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button id="logout-cancel-btn" class="flex-1 py-2.5 text-[14px] bg-slate-100 dark:bg-slate-800 rounded-xl font-bold btn-push border border-slate-200 dark:border-slate-700 shadow-sm">Ні</button>
+                <button id="logout-confirm-btn" class="flex-1 py-2.5 text-[14px] font-black bg-gradient-to-r from-rose-600 to-red-500 text-white rounded-xl btn-push shadow-lg shadow-rose-500/30">Вийти</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-md mx-auto px-4 pt-4 flex flex-col min-h-screen">
+        
+        <header class="flex items-center justify-between mb-6 bg-white/50 dark:bg-slate-900/50 p-2.5 rounded-[28px] border border-white/60 dark:border-slate-700/60 backdrop-blur-xl shadow-lg shadow-slate-200/20 dark:shadow-black/20 relative z-10">
+            <div class="flex items-center gap-3 min-w-0 flex-1 pl-1">
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur opacity-40 group-hover:opacity-70 transition duration-500"></div>
+                    <img src="https://lh3.googleusercontent.com/d/13UNdMTqTcqWLehFZ3sCeLrAdql_Zl1Yb" alt="Лого" class="relative w-11 h-11 rounded-full object-cover shadow-sm border-2 border-white dark:border-slate-800 shrink-0">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <h1 class="text-[16px] font-black tracking-wide text-slate-800 dark:text-slate-100 uppercase leading-none drop-shadow-sm">Гуртожиток №1 🏫</h1>
+                    <p class="text-[12px] text-slate-600 dark:text-slate-400 font-semibold truncate mt-1 tracking-wide">Поліський національний університет</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 ml-2 shrink-0 pr-1">
+                <button id="themeToggle" class="w-10 h-10 rounded-2xl bg-white/80 dark:bg-slate-800/80 flex items-center justify-center border border-white/80 dark:border-slate-600/50 shadow-sm text-slate-700 dark:text-slate-300 btn-push hover:bg-white transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden text-[14px]"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-[14px] text-amber-400 drop-shadow-sm"></i>
+                </button>
+                <button id="adminAuthBtn" class="w-10 h-10 rounded-2xl bg-white/80 dark:bg-slate-800/80 flex items-center justify-center border border-white/80 dark:border-slate-600/50 shadow-sm text-slate-700 dark:text-slate-300 btn-push hover:bg-white transition-colors">
+                    <i id="adminIcon" class="fa-solid fa-lock text-[14px]"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 space-y-5 relative z-10">
+            
+            <section id="tab-budget" class="app-tab space-y-5 tab-content-active">
+                <div class="diia-glass-card p-6 rounded-[32px]">
+                    <span class="text-[12px] font-black tracking-widest text-slate-500 dark:text-slate-400 uppercase block mb-1 drop-shadow-sm">Залишок фонду 💸</span>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span id="stat-balance" class="text-[42px] font-black tracking-tighter text-slate-900 dark:text-white drop-shadow-md">0</span>
+                        <span class="text-2xl font-black text-slate-600 dark:text-slate-300">₴</span>
+                        <i class="fa-solid fa-grivna absolute -right-2 -top-2 text-[100px] opacity-[0.03] text-slate-900 dark:text-white pointer-events-none rotate-12"></i>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-5 border-t border-slate-300/30 dark:border-slate-600/30">
+                        <div class="bg-white/30 dark:bg-slate-800/30 p-3 rounded-2xl border border-white/40 dark:border-slate-700/30 backdrop-blur-sm">
+                            <span class="text-[11px] block text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider mb-1">Зібрано 📥</span>
+                            <span id="stat-total-collected" class="text-[17px] font-black text-emerald-600 dark:text-emerald-400 block drop-shadow-sm">+0 ₴</span>
+                        </div>
+                        <div class="bg-white/30 dark:bg-slate-800/30 p-3 rounded-2xl border border-white/40 dark:border-slate-700/30 backdrop-blur-sm">
+                            <span class="text-[11px] block text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider mb-1">Витрачено 📤</span>
+                            <span id="stat-total-spent" class="text-[17px] font-black text-rose-500 dark:text-rose-400 block drop-shadow-sm">-0 ₴</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-5 border-t border-slate-300/30 dark:border-slate-600/30 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[12px] uppercase font-black tracking-widest text-slate-600 dark:text-slate-300 bg-white/40 dark:bg-slate-800/50 px-3 py-1 rounded-full border border-white/50 dark:border-slate-700">Активні цілі 🎯</span>
+                            <button id="admin-add-goal-btn" class="hidden px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-[12px] font-black uppercase btn-push shadow-md"><i class="fa-solid fa-plus mr-1"></i>Ціль</button>
+                        </div>
+                        <div id="container-active-goals" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white/50 dark:bg-slate-900/50 p-1.5 rounded-2xl flex border border-white/60 dark:border-slate-700/50 backdrop-blur-xl shadow-sm">
+                    <button id="subtab-btn-payments" class="flex-1 py-2.5 text-[14px] font-black rounded-xl transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm border border-slate-100 dark:border-slate-700 btn-push">Внески мешканців</button>
+                    <button id="subtab-btn-expenses" class="flex-1 py-2.5 text-[14px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all btn-push hover:text-slate-900 dark:hover:text-white">Фінансові звіти</button>
+                </div>
+
+                <div id="subtab-payments" class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex-1 group">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-[14px] group-focus-within:text-blue-500 transition-colors"></i>
+                            <input type="text" id="search-payments" placeholder="Пошук кімнати чи імені..." class="w-full pl-10 pr-4 py-3 text-[14px] bg-white/60 dark:bg-slate-900/60 border border-white/60 dark:border-slate-700/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/30 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 backdrop-blur-md shadow-sm transition-all font-medium">
+                        </div>
+                        <button id="admin-add-payment-btn" class="hidden w-12 h-12 bg-gradient-to-tr from-emerald-500 to-teal-600 text-white rounded-2xl text-[16px] flex items-center justify-center btn-push shadow-lg shadow-emerald-500/20 border border-emerald-400/30"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div id="list-payments" class="space-y-2.5"></div>
+                    <button id="load-more-payments-btn" class="w-full py-3 bg-white/50 dark:bg-slate-900/40 text-[14px] font-black text-blue-600 dark:text-blue-400 rounded-2xl border border-white/60 dark:border-slate-700/50 hidden btn-push shadow-sm backdrop-blur-md hover:bg-white/70 transition-colors">Показати ще внески</button>
+                </div>
+
+                <div id="subtab-expenses" class="space-y-3 hidden">
+                    <div class="flex justify-between items-center bg-white/40 dark:bg-slate-900/40 px-4 py-2 rounded-2xl border border-white/50 dark:border-slate-700/50 backdrop-blur-md">
+                        <span class="text-[12px] text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest">Витрати фонду 🧾</span>
+                        <button id="admin-add-expense-btn" class="hidden px-4 py-1.5 bg-gradient-to-r from-rose-500 to-red-600 text-white rounded-xl font-black text-[13px] btn-push shadow-md">Новий звіт</button>
+                    </div>
+                    <div id="list-expenses" class="space-y-2.5"></div>
+                    <button id="load-more-expenses-btn" class="w-full py-3 bg-white/50 dark:bg-slate-900/40 text-[14px] font-black text-blue-600 dark:text-blue-400 rounded-2xl border border-white/60 dark:border-slate-700/50 hidden btn-push shadow-sm backdrop-blur-md hover:bg-white/70 transition-colors">Показати ще звіти</button>
+                </div>
+            </section>
+
+            <section id="tab-events" class="app-tab space-y-4 hidden">
+                <div class="flex justify-between items-center bg-white/40 dark:bg-slate-900/40 px-4 py-3 rounded-2xl border border-white/50 dark:border-slate-700/50 backdrop-blur-md shadow-sm">
+                    <h2 class="text-[13px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Оголошення 📢</h2>
+                    <button id="admin-add-event-btn" class="hidden px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-black text-[13px] btn-push shadow-md">Створити</button>
+                </div>
+                <div id="list-events" class="space-y-3"></div>
+            </section>
+
+            <section id="tab-duty" class="app-tab space-y-5 hidden">
+                <div class="diia-glass-card p-2 rounded-[28px] overflow-hidden shadow-md cascade-item">
+                    <div class="relative rounded-[20px] overflow-hidden border border-white/40 dark:border-slate-700/50 group">
+                        <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10 pointer-events-none"></div>
+                        <img src="https://drive.google.com/thumbnail?id=1tYW5bFd98u7j9_Sv6XnZdVYC076uL8y0&sz=w800" 
+                             alt="Графік санітарних чергувань" 
+                             class="w-full h-auto object-cover cursor-pointer hover:scale-105 transition-transform duration-700 ease-out" 
+                             onclick="openLightbox('https://drive.google.com/thumbnail?id=1tYW5bFd98u7j9_Sv6XnZdVYC076uL8y0&sz=w1000', 'Графік санітарки')">
+                    </div>
+                </div>
+
+                <div class="p-5 bg-white/60 dark:bg-slate-900/60 rounded-[28px] border border-white/60 dark:border-slate-700/50 shadow-md backdrop-blur-xl">
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-300/40 dark:border-slate-700/50">
+                        <span class="text-[15px] font-black uppercase tracking-wide text-slate-800 dark:text-slate-100 flex items-center gap-2 drop-shadow-sm">
+                            <div class="p-1.5 bg-teal-500/20 rounded-lg"><svg class="w-4 h-4 text-teal-600 dark:text-teal-400 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+                            Контроль чистоти
+                        </span>
+                        <button id="admin-edit-rules-btn" class="hidden px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-[12px] font-black btn-push shadow-sm">Змінити</button>
+                    </div>
+                    <div id="duty-rules-content" class="text-[14px] text-slate-700 dark:text-slate-300 space-y-2.5 leading-relaxed font-medium"></div>
+                </div>
+
+                <div class="flex justify-between items-center px-2">
+                    <h2 class="text-[12px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 drop-shadow-sm">Відповідальні по поверхах 🧹</h2>
+                    <button id="admin-add-duty-btn" class="hidden px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-black text-[12px] btn-push shadow-sm">Призначити</button>
+                </div>
+                
+                <div class="flex flex-wrap bg-white/50 dark:bg-slate-900/50 p-1.5 rounded-2xl border border-white/60 dark:border-slate-700/50 gap-1.5 shadow-sm backdrop-blur-md">
+                    <button data-floor="1" class="floor-btn flex-1 py-2 text-center text-[13px] font-black rounded-xl transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-slate-100 dark:border-slate-700 scale-100">1 поверх</button>
+                    <button data-floor="2" class="floor-btn flex-1 py-2 text-center text-[13px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all hover:bg-white/50 dark:hover:bg-slate-800/50">2 поверх</button>
+                    <button data-floor="3" class="floor-btn flex-1 py-2 text-center text-[13px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all hover:bg-white/50 dark:hover:bg-slate-800/50">3 поверх</button>
+                    <button data-floor="4" class="floor-btn flex-1 py-2 text-center text-[13px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all hover:bg-white/50 dark:hover:bg-slate-800/50">4 поверх</button>
+                    <button data-floor="5" class="floor-btn flex-1 py-2 text-center text-[13px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all hover:bg-white/50 dark:hover:bg-slate-800/50">5 поверх</button>
+                </div>
+                <div id="list-duty" class="space-y-2.5"></div>
+            </section>
+
+            <section id="tab-complaints" class="app-tab space-y-5 hidden">
+                <form id="form-complaint" class="p-5 bg-white/60 dark:bg-slate-900/60 rounded-[28px] border border-white/60 dark:border-slate-700/50 shadow-md space-y-4 backdrop-blur-xl">
+                    <div class="text-[15px] font-black uppercase tracking-wide pb-3 border-b border-slate-200/60 dark:border-slate-700/50 text-slate-800 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-pen-nib text-rose-500"></i> Створити звернення
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[12px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider pl-1">Тема проблеми</label>
+                        <input type="text" id="compSubject" placeholder="Наприклад: Не працює розетка на кухні або несправний кран" required class="w-full px-4 py-3 text-[14px] font-medium bg-white/70 dark:bg-slate-800/60 border border-white/80 dark:border-slate-600/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-800 dark:text-slate-100 shadow-sm transition-all placeholder:text-slate-400">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[12px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider pl-1">Детальний опис</label>
+                        <textarea id="compDesc" rows="3" placeholder="Опишіть ситуацію максимально детально..." required class="w-full px-4 py-3 text-[14px] font-medium bg-white/70 dark:bg-slate-800/60 border border-white/80 dark:border-slate-600/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-800 dark:text-slate-100 shadow-sm transition-all placeholder:text-slate-400 resize-none"></textarea>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[12px] font-black text-slate-500 dark:text-slate-400 block uppercase tracking-wider pl-1">Фото докази</label>
+                        <div class="relative bg-white/70 dark:bg-slate-800/60 border border-dashed border-slate-300 dark:border-slate-600 rounded-2xl p-2 hover:border-rose-400 dark:hover:border-rose-500 transition-colors">
+                            <input type="file" id="compPhotoFile" accept="image/*" multiple required class="w-full text-[13px] font-medium text-slate-600 dark:text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[13px] file:font-black file:bg-rose-500/10 file:text-rose-600 dark:file:text-rose-400 file:cursor-pointer hover:file:bg-rose-500/20 file:transition-colors cursor-pointer">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-rose-600 to-red-500 text-white font-black rounded-2xl text-[15px] btn-push shadow-lg shadow-rose-500/30 uppercase tracking-wide mt-2">Надіслати звернення</button>
+                </form>
+
+                <div class="space-y-3">
+                    <span class="text-[13px] font-black text-slate-500 dark:text-slate-400 uppercase block tracking-widest pl-2 bg-white/40 dark:bg-slate-900/40 py-2 rounded-xl border border-white/50 dark:border-slate-700/50 backdrop-blur-md">Історія звернень 📋</span>
+                    <div id="list-complaints" class="space-y-2.5"></div>
+                </div>
+            </section>
+
+            <section id="tab-leaders" class="app-tab space-y-4 hidden">
+                <div class="flex justify-between items-center bg-white/40 dark:bg-slate-900/40 px-4 py-3 rounded-2xl border border-white/50 dark:border-slate-700/50 backdrop-blur-md shadow-sm">
+                    <h2 class="text-[13px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">Адміністрація 📞</h2>
+                    <button id="admin-add-leader-btn" class="hidden px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-black text-[13px] btn-push shadow-md">+ Додати</button>
+                </div>
+                <div id="list-leaders" class="space-y-2.5"></div>
+            </section>
+
+            <section id="tab-info" class="app-tab space-y-5 hidden">
+                <div class="bg-white/60 dark:bg-slate-900/60 rounded-[32px] border border-white/70 dark:border-slate-700/60 overflow-hidden shadow-lg backdrop-blur-xl relative">
+                    <div class="relative h-56 w-full bg-slate-200 dark:bg-slate-800">
+                        <img src="https://lh3.googleusercontent.com/d/1y6TFG3-hMzwXJ_HdZq-4vgq7F4sEDLUm" alt="Будівля" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent"></div>
+                        <div class="absolute bottom-5 left-5 text-white pr-5">
+                            <h3 class="text-[20px] font-black tracking-tight leading-tight">Гуртожиток №1<br><span class="text-[14px] text-blue-200 font-bold">Поліський національний університет</span></h3>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white/30 dark:bg-slate-950/40 text-[14px] text-slate-700 dark:text-slate-300 font-bold flex items-center gap-3 backdrop-blur-md">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 border border-blue-500/20">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <p class="leading-tight">м. Житомир, вул. Фещенка-Чопівського 33.</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center px-2">
+                    <h2 class="text-[12px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 drop-shadow-sm">Інформація та довідка ℹ️</h2>
+                    <button id="admin-edit-info-btn" class="hidden px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-black text-[12px] btn-push shadow-sm">Редагувати</button>
+                </div>
+                <div class="p-5 bg-white/60 dark:bg-slate-900/60 rounded-[28px] border border-white/60 dark:border-slate-700/50 text-[14px] text-slate-700 dark:text-slate-200 leading-relaxed space-y-3 shadow-md backdrop-blur-xl font-medium" id="info-app-content"></div>
+                
+                <button id="re-open-onboarding-btn" class="w-full py-4 bg-white/70 dark:bg-slate-800/60 border border-white/80 dark:border-slate-600/50 rounded-2xl text-[14px] font-black text-slate-700 dark:text-slate-200 btn-push shadow-md backdrop-blur-md flex items-center justify-center gap-2 hover:bg-white transition-colors">
+                    <i class="fa-solid fa-graduation-cap text-blue-500 text-lg"></i> Переглянути інструкцію знову
+                </button>
+            </section>
+
+        </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/60 dark:bg-slate-950/70 backdrop-blur-[30px] border-t border-white/40 dark:border-slate-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(0,0,0,0.3)] pb-safe">
+            <div class="max-w-md mx-auto h-[72px] flex items-center justify-around px-2">
+                <button data-tab="tab-budget" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] bg-white/90 dark:bg-slate-800/90 shadow-md border border-white/50 dark:border-slate-600/50 btn-push">
+                    <i class="fa-solid fa-wallet text-[18px] text-emerald-500"></i>
+                    <span class="text-[10px] font-black text-slate-900 dark:text-white mt-1.5 tracking-wide">Бюджет</span>
+                </button>
+                <button data-tab="tab-events" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors">
+                    <i class="fa-solid fa-bullhorn text-[18px] text-slate-400 dark:text-slate-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide">Події</span>
+                </button>
+                <button data-tab="tab-duty" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors">
+                    <svg class="nav-svg-icon w-6 h-6 text-slate-400 dark:text-slate-500 fill-current transition-colors" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide">Санітарка</span>
+                </button>
+                <button data-tab="tab-complaints" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors">
+                    <i class="fa-solid fa-screwdriver-wrench text-[18px] text-slate-400 dark:text-slate-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide">Скарги</span>
+                </button>
+                <button data-tab="tab-leaders" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors">
+                    <i class="fa-solid fa-address-book text-[18px] text-slate-400 dark:text-slate-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide">Контакти</span>
+                </button>
+                <button data-tab="tab-info" class="tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors">
+                    <i class="fa-solid fa-circle-info text-[18px] text-slate-400 dark:text-slate-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide">Інфо</span>
+                </button>
+            </div>
+        </nav>
+
+        <div id="modal-auth" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md hidden flex items-center justify-center p-4">
+            <div class="w-full max-w-xs bg-white/95 dark:bg-slate-900/95 rounded-diia p-6 shadow-2xl space-y-5 border border-white/50 dark:border-slate-700 animate-modal backdrop-blur-lg">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20 shadow-inner">
+                        <i class="fa-solid fa-shield-halved text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-[16px] font-black uppercase tracking-widest text-slate-800 dark:text-white">Пароль адміна 🔐</h3>
+                </div>
+                <div class="space-y-2">
+                    <input type="password" id="adminPasswordInput" placeholder="Введіть ключ..." class="w-full px-4 py-3 bg-slate-100/50 dark:bg-slate-800/50 border border-slate-300/50 dark:border-slate-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-center font-black text-[18px] tracking-[0.3em] shadow-inner transition-all">
+                </div>
+                <div class="flex gap-2 pt-1">
+                    <button id="auth-cancel-btn" class="flex-1 py-3 text-[14px] bg-slate-200/50 dark:bg-slate-800 rounded-xl font-bold btn-push border border-slate-300/50 dark:border-slate-700">Назад</button>
+                    <button type="button" id="auth-submit-btn" class="flex-1 py-3 text-[14px] font-black bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl btn-push shadow-lg shadow-blue-500/30">Вхід</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-crud-form" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+            <div class="w-full max-w-sm bg-white/95 dark:bg-slate-900/95 rounded-[32px] p-5 shadow-2xl space-y-4 my-auto border border-white/50 dark:border-slate-700 animate-modal backdrop-blur-lg">
+                <div class="flex justify-between items-center border-b pb-3 border-slate-200/60 dark:border-slate-700">
+                    <h3 id="crud-modal-title" class="text-[15px] font-black uppercase tracking-wide text-blue-600 dark:text-blue-400">Редагування</h3>
+                    <button type="button" class="close-modal-btn w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 dark:text-slate-400 hover:text-rose-500 btn-push transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <form id="form-universal-crud" class="space-y-4 pt-1">
+                    <input type="hidden" id="crud-sheet-name"><input type="hidden" id="crud-row-id"><input type="hidden" id="crud-action-type">
+                    <div id="crud-dynamic-fields" class="space-y-3 font-medium"></div>
+                    <div class="flex gap-2 pt-4 border-t border-slate-200/60 dark:border-slate-700">
+                        <button type="button" class="close-modal-btn flex-1 py-3 text-[14px] bg-slate-100 dark:bg-slate-800 rounded-xl font-bold btn-push border border-slate-200 dark:border-slate-700">Скасувати</button>
+                        <button type="submit" class="flex-1 py-3 text-[14px] font-black bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl btn-push shadow-lg shadow-blue-500/30">Зберегти</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        /* Стилі для карток, що рендеряться в list-* контейнерах */
+        #list-payments > div, #list-expenses > div, #container-active-goals > div, #list-events > div, #list-duty > div, #list-complaints > div, #list-leaders > div {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark #list-payments > div, .dark #list-expenses > div, .dark #container-active-goals > div, .dark #list-events > div, .dark #list-duty > div, .dark #list-complaints > div, .dark #list-leaders > div {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #list-payments > div:hover, #list-expenses > div:hover, #container-active-goals > div:hover, #list-events > div:hover, #list-duty > div:hover, #list-complaints > div:hover, #list-leaders > div:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.7);
+        }
+        
+        .dark #list-payments > div:hover, .dark #list-expenses > div:hover, .dark #container-active-goals > div:hover, .dark #list-events > div:hover, .dark #list-duty > div:hover, .dark #list-complaints > div:hover, .dark #list-leaders > div:hover {
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Прогрес бар для цілей */
+        #container-active-goals .bg-slate-200 { background-color: rgba(226, 232, 240, 0.6); border: 1px solid rgba(255,255,255,0.5); box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .dark #container-active-goals .dark\:bg-slate-700 { background-color: rgba(51, 65, 85, 0.6); border: 1px solid rgba(255,255,255,0.05); }
+        #container-active-goals .bg-blue-600 { background: linear-gradient(90deg, #3b82f6, #6366f1); box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
+    </style>
+
+    <script>
+        const STORAGE_KEY = 'pnu_dorm1_db_v11';
+        
+        let initialDB = {
+            goals: [
+                { id: "g1", title: "Ремонт пральних машин 🧺", desc: "Заміна ТЕНів та підшипників у двох пральних машинах на 3 та 4 поверхах.", target: 3500 },
+                { id: "g2", title: "Посуд на кухні 🍳", desc: "Закупівля нових сковорідок та каструль спільного користування.", target: 1800 }
+            ],
+            payments: [
+                { id: "p1", room: "302", name: "Владислав Ковальчук", amount: 150, date: "2026-05-10", status: "Здано" },
+                { id: "p2", room: "415", name: "Анна Мельник", amount: 150, date: "2026-05-11", status: "Здано" },
+                { id: "p3", room: "204", name: "Дмитро Шевченко", amount: 0, date: "-", status: "Не здано" },
+                { id: "p4", room: "508", name: "Марія Бондар", amount: 150, date: "2026-05-12", status: "Здано" }
+            ],
+            expenses: [
+                { id: "e1", title: "Закупівля миючих засобів", amount: 450, desc: "Придбано 5л хлорних засобів та рідкого мила для кухонь першого поверху.", date: "2026-05-08", photosList: [] },
+                { id: "e2", title: "Нові замки на двері", amount: 900, desc: "Заміна серцевин та виготовлення дублікатів ключів для сушильної кімнати.", date: "2026-05-14", photosList: [] }
+            ],
+            events: [
+                { id: "ev1", title: "Генеральне прибирання території 🌿", desc: "Збираємось біля головного входу для благоустрою клумб та фарбування лавок. Інвентар видає завідувач гуртожитку.", date: "2026-05-25", time: "15:00", location: "Подвір'я гуртожитку" },
+                { id: "ev2", title: "Планова перевірка електромереж ⚡", desc: "Електрики проводитимуть огляд щитових. Можливі короткочасні відключення світла.", date: "2026-05-28", time: "10:00 - 14:00", location: "Усі блоки" }
+            ],
+            duty: [
+                { id: "d1", floor: "1", wing: "Ліве", room: "105", date: "2026-05-22" },
+                { id: "d2", floor: "3", wing: "Ліве", room: "305", date: "2026-05-22" },
+                { id: "d3", floor: "3", wing: "Праве", room: "309", date: "2026-05-23" }
+            ],
+            leaders: [
+                { id: "l1", role: "Завідувач гуртожитку 🔑", name: "Ольга Миколаївна", phone: "+380671234567", tg: "olga_pnu" },
+                { id: "l2", role: "Голова студради 🎓", name: "Артем Захаров", phone: "+380939876543", tg: "artem_pnu_st" },
+                { id: "l3", role: "Староста гуртожитку 📜", name: "Микола Васильович", phone: "", tg: "" }
+            ],
+            complaints: [],
+            info: {
+                content: `
+                    <div class="text-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 text-white flex items-center justify-center text-xl mx-auto mb-2 shadow-lg">
+                            <i class="fa-solid fa-sparkles"></i>
+                        </div>
+                        <h3 class="text-[17px] font-black uppercase text-slate-800 dark:text-slate-100">Ласкаво просимо!</h3>
+                        <p class="text-[13px] text-slate-500 mt-1">Твій кишеньковий помічник по гуртожитку</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                            <h4 class="text-[14px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-wallet text-blue-500"></i> Прозорий бюджет
+                            </h4>
+                            <p class="text-[13px] text-slate-600 dark:text-slate-400">Слідкуй за всіма надходженнями та витратами. Ми прагнемо до повної фінансової прозорості.</p>
+                        </div>
+
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                            <h4 class="text-[14px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-broom text-teal-500"></i> Графік чергувань
+                            </h4>
+                            <p class="text-[13px] text-slate-600 dark:text-slate-400">Завжди будь в курсі, хто відповідає за чистоту на поверсі. Поважаймо працю один одного!</p>
+                        </div>
+
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+                            <h4 class="text-[14px] font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-paper-plane text-rose-500"></i> Швидкий зв'язок
+                            </h4>
+                            <p class="text-[13px] text-slate-600 dark:text-slate-400">Помітив поломку або маєш пропозицію? Залишай заявку, і адміністрація її обов'язково розгляне.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-[12px] font-medium text-slate-400">Зробимо наш гуртожиток кращим разом! 💙💛</p>
+                    </div>
+                `
+            },
+            rules: {
+                content: `
+                    <p>Просимо з повагою ставитися до санітарки і не змушувати адміністрацію зачиняти кухні на тиждень.</p>
+                    <p>Зверніть увагу: щосереди проводиться генеральне прибирання кухні, а саме — миття газових плит (зверху та з боків), плитки на стінах, мийок та підлоги.</p>
+                    <p>Дякуємо за розуміння та співпрацю!</p>
+                `
+            }
+        };
+
+        let mockDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialDB;
+        if (!mockDB.complaints) mockDB.complaints = [];
+
+        const tabIconsMap = { 'tab-budget': 'fa-wallet', 'tab-events': 'fa-bullhorn', 'tab-duty': 'fa-circle-info', 'tab-complaints': 'fa-screwdriver-wrench', 'tab-leaders': 'fa-address-book', 'tab-info': 'fa-circle-info' };
+        let currentAdminPassword = localStorage.getItem('pnu_admin_session_v11') || null;
+        let selectedFloor = "3";
+        let visiblePaymentsCount = 4;
+        let visibleExpensesCount = 4;
+        let currentWelcomeStep = 0;
+
+        const onboardingSteps = [
+            { title: "Вітаємо у додатку! 👋", icon: "fa-rocket", text: "✨ <b>Гуртожиток №1 ПНУ</b> тепер повністю у твоєму смартфоні!<br><br>Ця цифрова платформа створена для того, щоб зробити життя в нашому студентському домі максимально прозорим, організованим та комфортним для кожного." },
+            { title: "Прозорі фінанси та звернення 💸📊", icon: "fa-chart-pie", text: "📊 У розділі <b>Бюджет</b> ти завжди бачиш реальний баланс фонду, куди йдуть кошти та які цілі заплановано виконати.<br><br>Виникли якісь проблеми чи побутові труднощі? Подавай миттєву заявку у вкладці <b>Скарги</b>, додавай фото докази і адміністрація гуртожитку розгляне її найближчим часом!" },
+            { title: "Чергування та зв'язок 🧹📞", icon: "fa-users", text: "📅 Більше жодних паперових суперечок — графік санітарних чергувань по поверхах завжди під рукою.<br><br>Потрібен завідувач гуртожитку, староста чи заступники? Усі контакти з можливостю швидкого зв'язку зібрані в один дотик!" }
+        ];
+
+        let confirmCallback = null;
+        function showCustomConfirm(text, callback) {
+            document.getElementById('confirm-modal-text').innerText = text;
+            document.getElementById('modal-custom-confirm').classList.remove('hidden');
+            confirmCallback = callback;
+        }
+
+        function formatToUkrainianDate(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            const parts = dateString.split('-');
+            if (parts.length !== 3) return dateString;
+            const day = parseInt(parts[2], 10);
+            const monthIndex = parseInt(parts[1], 10) - 1;
+            const months = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
+            return `${day} ${months[monthIndex]}`;
+        }
+
+        function syncDB() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(mockDB));
+        }
+
+        function isAdmin() {
+            return currentAdminPassword === 'admin777';
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `p-4 text-[14px] font-bold rounded-2xl shadow-2xl border backdrop-blur-xl btn-push flex items-center gap-3 translate-y-[-20px] opacity-0 transition-all duration-400 ease-out ${
+                type === 'success' ? 'bg-emerald-500/90 text-white border-emerald-400/50' : 'bg-rose-600/90 text-white border-rose-500/50'
+            }`;
+            toast.innerHTML = `<i class="fa-solid text-lg ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span class="tracking-wide">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-[-20px]', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-20px]', 'opacity-0');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        function updateAdminUI() {
+            const adminBtns = [
+                'admin-add-goal-btn', 'admin-add-payment-btn', 'admin-add-expense-btn', 'admin-add-event-btn', 'admin-add-duty-btn', 'admin-edit-info-btn', 'admin-edit-rules-btn', 'admin-add-leader-btn'
+            ];
+            adminBtns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    if (isAdmin()) btn.classList.remove('hidden');
+                    else btn.classList.add('hidden');
+                }
+            });
+            const icon = document.getElementById('adminIcon');
+            if (isAdmin()) {
+                icon.className = 'fa-solid fa-unlock text-emerald-500 text-[14px] drop-shadow-sm';
+            } else {
+                icon.className = 'fa-solid fa-lock text-[14px]';
+            }
+        }
+
+        function renderWelcomeStep() {
+            const step = onboardingSteps[currentWelcomeStep];
+            document.getElementById('welcome-instruction-title').innerText = step.title;
+            const contentBox = document.getElementById('welcome-instruction-content');
+            contentBox.innerHTML = step.text;
+            contentBox.classList.remove('step-animation');
+            void contentBox.offsetWidth;
+            contentBox.classList.add('step-animation');
+
+            const iconEl = document.getElementById('welcome-step-icon');
+            iconEl.innerHTML = `<i class="fa-solid ${step.icon}"></i>`;
+            document.getElementById('welcome-step-indicator').innerText = `Крок ${currentWelcomeStep + 1} з ${onboardingSteps.length}`;
+
+            if (currentWelcomeStep === 0) {
+                document.getElementById('welcome-prev-btn').classList.add('invisible');
+            } else {
+                document.getElementById('welcome-prev-btn').classList.remove('invisible');
+            }
+
+            if (currentWelcomeStep === onboardingSteps.length - 1) {
+                document.getElementById('welcome-next-btn').classList.add('hidden');
+                document.getElementById('welcome-start-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('welcome-next-btn').classList.remove('hidden');
+                document.getElementById('welcome-start-btn').classList.add('hidden');
+            }
+        }
+
+        function openWelcomeInstruction(force = false) {
+            if (!localStorage.getItem('pnu_onboarding_passed_v11') || force) {
+                currentWelcomeStep = 0;
+                renderWelcomeStep();
+                document.getElementById('modal-welcome-instruction').classList.remove('hidden');
+            }
+        }
+
+        function closeWelcomeInstruction() {
+            localStorage.setItem('pnu_onboarding_passed_v11', 'true');
+            document.getElementById('modal-welcome-instruction').classList.add('hidden');
+            showToast('Приємного користування! ✨');
+        }
+
+        function renderAll() {
+            let totalCollected = mockDB.payments.reduce((acc, curr) => acc + Number(curr.amount), 0);
+            let totalSpent = mockDB.expenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
+            let totalBalance = totalCollected - totalSpent;
+
+            document.getElementById('stat-balance').innerText = totalBalance.toLocaleString('uk-UA');
+            document.getElementById('stat-total-collected').innerText = `+${totalCollected.toLocaleString('uk-UA')} ₴`;
+            document.getElementById('stat-total-spent').innerText = `-${totalSpent.toLocaleString('uk-UA')} ₴`;
+
+            renderGoals(totalBalance);
+            renderPayments();
+            renderExpenses();
+            renderEvents();
+            renderDuty();
+            renderComplaints();
+            renderLeaders();
+
+            document.getElementById('info-app-content').innerHTML = mockDB.info.content;
+            document.getElementById('duty-rules-content').innerHTML = mockDB.rules.content;
+        }
+
+        function renderGoals(totalBalance) {
+            const goalsContainer = document.getElementById('container-active-goals');
+            goalsContainer.innerHTML = '';
+            if (mockDB.goals.length === 0) {
+                goalsContainer.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-2 font-medium">Цілей немає</p>`;
+                return;
+            }
+            mockDB.goals.forEach(g => {
+                let progressPercent = Math.min(Math.round((totalBalance / g.target) * 100), 100);
+                if (progressPercent < 0) progressPercent = 0;
+                const card = document.createElement('div');
+                card.className = 'p-4 cascade-item relative';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="pr-8">
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100">${g.title}</h4>
+                            <p class="text-[13px] font-medium text-slate-600 dark:text-slate-400 mt-1 leading-tight">${g.desc}</p>
+                        </div>
+                        ${isAdmin() ? `<button class="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors text-[13px]" onclick="handleItemDeletion('goals', '${g.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+                    </div>
+                    <div class="flex justify-between text-[13px] font-black text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                        <span>Прогрес: ${progressPercent}%</span>
+                        <span>Ціль: ${g.target.toLocaleString('uk-UA')} ₴</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden shadow-inner relative">
+                        <div class="bg-blue-600 h-full rounded-full transition-all duration-1000 ease-out" style="width: ${progressPercent}%"></div>
+                    </div>
+                `;
+                goalsContainer.appendChild(card);
+            });
+        }
+
+        function renderPayments() {
+            const list = document.getElementById('list-payments');
+            list.innerHTML = '';
+            const search = document.getElementById('search-payments').value.toLowerCase().trim();
+            let filtered = mockDB.payments.filter(p => p.room.toLowerCase().includes(search) || p.name.toLowerCase().includes(search));
+            let visible = filtered.slice(0, visiblePaymentsCount);
+            
+            if (visible.length === 0) {
+                list.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-4 font-medium">Нічого не знайдено 🔎</p>`;
+                document.getElementById('load-more-payments-btn').classList.add('hidden');
+                return;
+            }
+            visible.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'p-3.5 flex items-center justify-between cascade-item';
+                item.innerHTML = `
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 font-black rounded-2xl flex flex-col items-center justify-center border border-blue-500/20 shadow-inner shrink-0">
+                            <span class="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-black leading-none mb-0.5">Кімн</span>
+                            <span class="text-[18px] leading-none">${p.room}</span>
+                        </div>
+                        <div>
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100">${p.name}</h4>
+                            <span class="text-[12px] font-bold text-slate-500 dark:text-slate-400 block mt-0.5 flex items-center gap-1"><i class="fa-regular fa-calendar text-[10px]"></i> ${formatToUkrainianDate(p.date)}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1.5 text-[13px] font-black rounded-xl shadow-sm border ${
+                            p.status === 'Здано' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                        }">${p.amount} ₴</span>
+                        ${isAdmin() ? `
+                            <div class="flex gap-1 ml-1 flex-col sm:flex-row">
+                                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-colors text-[13px]" onclick="openCrudForm('payments', 'edit', '${p.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-rose-500 transition-colors text-[13px]" onclick="handleItemDeletion('payments', '${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+            if (filtered.length > visiblePaymentsCount) {
+                document.getElementById('load-more-payments-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('load-more-payments-btn').classList.add('hidden');
+            }
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('list-expenses');
+            list.innerHTML = '';
+            if (mockDB.expenses.length === 0) {
+                list.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-6 font-medium">Жодних фінансових звітів не знайдено 🔎</p>`;
+                return;
+            }
+            let visible = mockDB.expenses.slice(0, visibleExpensesCount);
+            visible.forEach(e => {
+                const item = document.createElement('div');
+                item.className = 'p-4 space-y-2.5 cascade-item';
+                let photosHTML = '';
+                if (e.photosList && e.photosList.length > 0) {
+                    photosHTML = `<div class="flex gap-2 overflow-x-auto pt-1 pb-1 scrollbar-none">`;
+                    e.photosList.forEach((url, index) => {
+                        photosHTML += `<img src="${url}" class="w-14 h-14 object-cover rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer shadow-sm hover:scale-105 transition-transform" onclick="openLightbox('${url}', '${e.title} - Фото ${index+1}')">`;
+                    });
+                    photosHTML += `</div>`;
+                }
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[12px] font-bold text-slate-500 dark:text-slate-400 block flex items-center gap-1"><i class="fa-regular fa-calendar text-[10px]"></i> ${formatToUkrainianDate(e.date)}</span>
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100 mt-1 leading-tight">${e.title}</h4>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[15px] font-black text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20 shadow-sm">-${e.amount} ₴</span>
+                            ${isAdmin() ? `<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 transition-colors text-[13px]" onclick="handleItemDeletion('expenses', '${e.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
+                    <p class="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">${e.desc}</p>
+                    ${photosHTML}
+                `;
+                list.appendChild(item);
+            });
+            if (mockDB.expenses.length > visibleExpensesCount) {
+                document.getElementById('load-more-expenses-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('load-more-expenses-btn').classList.add('hidden');
+            }
+        }
+
+        function renderEvents() {
+            const list = document.getElementById('list-events');
+            list.innerHTML = '';
+            if (mockDB.events.length === 0) {
+                list.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-6 font-medium">Немає важливих оголошень та подій 📢</p>`;
+                return;
+            }
+            mockDB.events.forEach(ev => {
+                const item = document.createElement('div');
+                item.className = 'p-5 space-y-2.5 relative cascade-item';
+                item.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md rounded-lg font-black text-[10px] uppercase tracking-wider">Важливо</span>
+                            <span class="text-[12px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1"><i class="fa-regular fa-clock"></i> ${formatToUkrainianDate(ev.date)} о ${ev.time}</span>
+                        </div>
+                        ${isAdmin() ? `
+                            <div class="flex gap-1.5 absolute right-3 top-3">
+                                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-blue-500 transition-colors text-[13px]" onclick="openCrudForm('events', 'edit', '${ev.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 transition-colors text-[13px]" onclick="handleItemDeletion('events', '${ev.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <h3 class="text-[16px] font-black text-slate-900 dark:text-white pr-16">${ev.title}</h3>
+                    <p class="text-[14px] font-medium text-slate-700 dark:text-slate-300 leading-relaxed">${ev.desc}</p>
+                    <div class="pt-2 text-[13px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-2 border-t border-slate-200/50 dark:border-slate-700/50 mt-2">
+                        <i class="fa-solid fa-location-dot text-blue-500 text-lg drop-shadow-sm"></i> <span class="text-slate-800 dark:text-slate-200">${ev.location}</span>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderDuty() {
+            const list = document.getElementById('list-duty');
+            list.innerHTML = '';
+            let filtered = mockDB.duty.filter(d => d.floor === selectedFloor);
+            if (filtered.length === 0) {
+                list.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-5 italic font-medium">Немає призначених чергових для цього поверху</p>`;
+                return;
+            }
+            filtered.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'p-3.5 flex justify-between items-center cascade-item';
+                
+                let wingLabel = d.wing ? d.wing + ' крило' : '';
+                let wingColorClass = d.wing === 'Ліве' ? 'from-indigo-500/20 to-blue-500/20 text-indigo-600 dark:text-indigo-400 border-indigo-500/30' : 
+                                     (d.wing === 'Праве' ? 'from-fuchsia-500/20 to-pink-500/20 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/30' : 'from-teal-500/20 to-emerald-500/20 text-teal-600 dark:text-teal-400 border-teal-500/30');
+                let wingIcon = d.wing === 'Ліве' ? '⬅️' : (d.wing === 'Праве' ? '➡️' : '🚪');
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 bg-gradient-to-br rounded-2xl flex items-center justify-center border shadow-inner font-black text-[16px] ${wingColorClass}">
+                            ${wingIcon}
+                        </div>
+                        <div>
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100">Кімната № ${d.room}</h4>
+                            <span class="text-[12px] font-bold text-slate-500 dark:text-slate-400 block mt-0.5 flex items-center gap-1"><i class="fa-solid fa-calendar-day text-[10px]"></i> ${formatToUkrainianDate(d.date)} <span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-[10px] uppercase ml-1">${wingLabel}</span></span>
+                        </div>
+                    </div>
+                    ${isAdmin() ? `<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 transition-colors text-[13px]" onclick="handleItemDeletion('duty', '${d.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderComplaints() {
+            const list = document.getElementById('list-complaints');
+            list.innerHTML = '';
+            if (mockDB.complaints.length === 0) {
+                list.innerHTML = `<p class="text-[14px] text-slate-500 dark:text-slate-400 text-center py-4 italic font-medium">Звернень поки що немає</p>`;
+                return;
+            }
+            mockDB.complaints.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'p-4 space-y-3 cascade-item relative';
+                let photosHTML = '';
+                if (c.photosList && c.photosList.length > 0) {
+                    photosHTML = `<div class="flex gap-2 pt-1 pb-1 overflow-x-auto scrollbar-none">`;
+                    c.photosList.forEach((url, i) => {
+                        photosHTML += `<img src="${url}" class="w-12 h-12 object-cover rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:scale-105 transition-transform" onclick="openLightbox('${url}', '${c.subject} - Доказ ${i+1}')">`;
+                    });
+                    photosHTML += `</div>`;
+                }
+                item.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <div class="pr-6">
+                            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block flex items-center gap-1 mb-1"><i class="fa-regular fa-clock"></i> ${formatToUkrainianDate(c.date)}</span>
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100 leading-tight">${c.subject}</h4>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg shadow-sm border ${c.status === 'Вирішено 🎉' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-orange-500/10 text-orange-600 border-orange-500/20'}">${c.status}</span>
+                            ${isAdmin() ? `
+                                <div class="flex gap-1">
+                                    <button class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-blue-500 transition-colors text-[12px]" onclick="openCrudForm('complaints', 'edit', '${c.id}')"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 transition-colors text-[12px]" onclick="handleItemDeletion('complaints', '${c.id}')"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <p class="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium bg-white/40 dark:bg-slate-800/40 p-2.5 rounded-xl border border-white/50 dark:border-slate-700/50">${c.desc}</p>
+                    ${photosHTML}
+                    ${isAdmin() && c.status !== 'Вирішено 🎉' ? `
+                        <div class="flex justify-end pt-2 border-t border-slate-200/50 dark:border-slate-700/50 mt-2">
+                            <button class="px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg text-[11px] font-black uppercase tracking-wider btn-push shadow-md" onclick="changeComplaintStatus('${c.id}', 'Вирішено 🎉')"><i class="fa-solid fa-check mr-1"></i> Відмітити як вирішено</button>
+                        </div>
+                    ` : ''}
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function changeComplaintStatus(id, newStatus) {
+            let item = mockDB.complaints.find(x => x.id === id);
+            if (item) {
+                item.status = newStatus;
+                syncDB();
+                renderAll();
+                showToast('Статус звернення оновлено!');
+            }
+        }
+
+        function renderLeaders() {
+            const list = document.getElementById('list-leaders');
+            list.innerHTML = '';
+            mockDB.leaders.forEach(l => {
+                const item = document.createElement('div');
+                item.className = 'p-3.5 flex justify-between items-center cascade-item';
+                
+                let linksHTML = '<div class="flex items-center gap-2">';
+                if (l.phone && l.phone.trim() !== '') {
+                    linksHTML += `<a href="tel:${l.phone}" class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 btn-push text-[16px]"><i class="fa-solid fa-phone"></i></a>`;
+                }
+                if (l.tg && l.tg.trim() !== '') {
+                    linksHTML += `<a href="https://t.me/${l.tg.replace('@','')}" target="_blank" class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30 btn-push text-[16px]"><i class="fa-solid fa-paper-plane"></i></a>`;
+                }
+                linksHTML += '</div>';
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div class="w-12 h-12 rounded-full bg-slate-200/80 dark:bg-slate-800 flex items-center justify-center border-2 border-white dark:border-slate-700 font-black text-xl shrink-0 text-slate-600 dark:text-slate-400 shadow-sm">
+                            ${l.name.charAt(0)}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <span class="text-[11px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 block leading-none mb-1.5">${l.role}</span>
+                            <h4 class="text-[15px] font-black text-slate-800 dark:text-slate-100 truncate leading-tight">${l.name}</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 shrink-0 ml-2">
+                        ${linksHTML}
+                        ${isAdmin() ? `
+                            <div class="flex flex-col gap-1 shrink-0 border-l border-slate-200 dark:border-slate-700 pl-2">
+                                <button class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-blue-500 transition-colors text-[12px]" onclick="openCrudForm('leaders', 'edit', '${l.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 transition-colors text-[12px]" onclick="handleItemDeletion('leaders', '${l.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function openLightbox(url, caption) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-caption').innerText = caption || 'Перегляд документа';
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function handleItemDeletion(sheet, id) {
+            showCustomConfirm('Ви впевнені, що хочете видалити цей запис безповоротно? ❌', () => {
+                mockDB[sheet] = mockDB[sheet].filter(x => x.id !== id);
+                syncDB();
+                renderAll();
+                showToast('Запис успішно видалено!');
+            });
+        }
+
+        function readMultipleFiles(fileInput, callback) {
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                callback([]);
+                return;
+            }
+            let files = Array.from(fileInput.files);
+            let results = [];
+            let readCount = 0;
+            files.forEach(file => {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    results.push(e.target.result);
+                    readCount++;
+                    if (readCount === files.length) {
+                        callback(results);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function openCrudForm(sheet, action, id = null) {
+            document.getElementById('crud-sheet-name').value = sheet;
+            document.getElementById('crud-action-type').value = action;
+            document.getElementById('crud-row-id').value = id || '';
+            
+            const title = document.getElementById('crud-modal-title');
+            const fieldsContainer = document.getElementById('crud-dynamic-fields');
+            fieldsContainer.innerHTML = '';
+
+            let item = id ? mockDB[sheet].find(x => x.id === id) : null;
+
+            if (sheet === 'goals') {
+                title.innerText = action === 'add' ? '🎯 Додати ціль' : '🎯 Редагувати ціль';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Назва цілі</label>
+                        <input type="text" id="input-goal-title" value="${item ? item.title : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Опис / Деталі</label>
+                        <textarea id="input-goal-desc" rows="2" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">${item ? item.desc : ''}</textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Необхідна сума (₴)</label>
+                        <input type="number" id="input-goal-target" value="${item ? item.target : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                `;
+            } else if (sheet === 'payments') {
+                title.innerText = action === 'add' ? '📥 Новий внесок' : '📥 Редагувати внесок';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">№ Кімнати</label>
+                        <input type="text" id="input-pay-room" value="${item ? item.room : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">ПІБ мешканця</label>
+                        <input type="text" id="input-pay-name" value="${item ? item.name : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Сума внеску (₴)</label>
+                        <input type="number" id="input-pay-amount" value="${item ? item.amount : '0'}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Дата</label>
+                        <input type="date" id="input-pay-date" value="${item && item.date !== '-' ? item.date : new Date().toISOString().split('T')[0]}" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Статус</label>
+                        <select id="input-pay-status" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                            <option value="Здано" ${item && item.status === 'Здано' ? 'selected' : ''}>Здано</option>
+                            <option value="Не здано" ${item && item.status === 'Не здано' ? 'selected' : ''}>Не здано</option>
+                        </select>
+                    </div>
+                `;
+            } else if (sheet === 'expenses') {
+                title.innerText = '📤 Звіт витрати';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Назва витрати</label>
+                        <input type="text" id="input-exp-title" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Сума (₴)</label>
+                        <input type="number" id="input-exp-amount" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Опис</label>
+                        <textarea id="input-exp-desc" rows="2" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all"></textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1 block">Фото (Опціонально)</label>
+                        <input type="file" id="input-exp-files" accept="image/*" multiple class="w-full text-[13px] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[13px] file:font-black file:bg-blue-500/10 file:text-blue-600 cursor-pointer">
+                    </div>
+                `;
+            } else if (sheet === 'events') {
+                title.innerText = action === 'add' ? '📢 Створити оголошення' : '📢 Редагувати оголошення';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Заголовок</label>
+                        <input type="text" id="input-ev-title" value="${item ? item.title : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Текст</label>
+                        <textarea id="input-ev-desc" rows="3" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">${item ? item.desc : ''}</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Дата</label>
+                            <input type="date" id="input-ev-date" value="${item ? item.date : new Date().toISOString().split('T')[0]}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Час</label>
+                            <input type="text" id="input-ev-time" value="${item ? item.time : '12:00'}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Місце</label>
+                        <input type="text" id="input-ev-location" value="${item ? item.location : 'Усі поверхи'}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                `;
+            } else if (sheet === 'duty') {
+                title.innerText = '🧹 Призначити чергових';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Поверх</label>
+                        <select id="input-duty-floor" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                            <option value="1" ${selectedFloor === '1' ? 'selected' : ''}>1 поверх</option>
+                            <option value="2" ${selectedFloor === '2' ? 'selected' : ''}>2 поверх</option>
+                            <option value="3" ${selectedFloor === '3' ? 'selected' : ''}>3 поверх</option>
+                            <option value="4" ${selectedFloor === '4' ? 'selected' : ''}>4 поверх</option>
+                            <option value="5" ${selectedFloor === '5' ? 'selected' : ''}>5 поверх</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Крило</label>
+                        <select id="input-duty-wing" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                            <option value="Ліве">Ліве крило</option>
+                            <option value="Праве">Праве крило</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">№ Кімнати</label>
+                        <input type="text" id="input-duty-room" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Дата чергування</label>
+                        <input type="date" id="input-duty-date" value="${new Date().toISOString().split('T')[0]}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                `;
+            } else if (sheet === 'leaders') {
+                title.innerText = action === 'add' ? '📞 Додати контакт' : '📞 Редагувати контакт';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Посада / Роль</label>
+                        <input type="text" id="input-lead-role" value="${item ? item.role : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all" placeholder="Наприклад: Завідувач">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">ПІБ / Ім'я</label>
+                        <input type="text" id="input-lead-name" value="${item ? item.name : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Номер телефону</label>
+                        <input type="text" id="input-lead-phone" value="${item ? item.phone : ''}" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all" placeholder="+380...">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Telegram (@)</label>
+                        <input type="text" id="input-lead-tg" value="${item ? item.tg : ''}" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all" placeholder="@username">
+                    </div>
+                `;
+            } else if (sheet === 'complaints') {
+                title.innerText = '📝 Редагувати скаргу';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Тема</label>
+                        <input type="text" id="input-comp-subject" value="${item ? item.subject : ''}" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Опис</label>
+                        <textarea id="input-comp-desc" rows="3" required class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">${item ? item.desc : ''}</textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[12px] font-black text-slate-500 uppercase tracking-wider pl-1">Статус</label>
+                        <select id="input-comp-status" class="w-full px-4 py-3 text-[14px] border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">
+                            <option value="В обробці ⏳" ${item && item.status === 'В обробці ⏳' ? 'selected' : ''}>В обробці ⏳</option>
+                            <option value="Вирішено 🎉" ${item && item.status === 'Вирішено 🎉' ? 'selected' : ''}>Вирішено 🎉</option>
+                        </select>
+                    </div>
+                `;
+            } else if (sheet === 'info' || sheet === 'rules') {
+                title.innerText = '📝 Редагувати блок (HTML)';
+                fieldsContainer.innerHTML = `
+                    <div class="space-y-1">
+                        <textarea id="input-html-content" rows="8" required class="w-full p-4 text-xs font-mono border border-slate-300 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 transition-all">${mockDB[sheet].content.trim()}</textarea>
+                    </div>
+                `;
+            }
+            document.getElementById('modal-crud-form').classList.remove('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+            openWelcomeInstruction();
+
+            document.getElementById('welcome-next-btn').addEventListener('click', () => {
+                if (currentWelcomeStep < onboardingSteps.length - 1) { currentWelcomeStep++; renderWelcomeStep(); }
+            });
+            document.getElementById('welcome-prev-btn').addEventListener('click', () => {
+                if (currentWelcomeStep > 0) { currentWelcomeStep--; renderWelcomeStep(); }
+            });
+            document.getElementById('welcome-skip-btn').addEventListener('click', closeWelcomeInstruction);
+            document.getElementById('welcome-start-btn').addEventListener('click', closeWelcomeInstruction);
+            document.getElementById('re-open-onboarding-btn').addEventListener('click', () => openWelcomeInstruction(true));
+
+            document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+                document.getElementById('modal-custom-confirm').classList.add('hidden'); confirmCallback = null;
+            });
+            document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+                document.getElementById('modal-custom-confirm').classList.add('hidden');
+                if (confirmCallback) confirmCallback(); confirmCallback = null;
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    const icon = btn.querySelector('i, svg');
+                    if (icon) {
+                        icon.classList.add('icon-bounce');
+                        setTimeout(() => icon.classList.remove('icon-bounce'), 500);
+                    }
+
+                    document.querySelectorAll('.app-tab').forEach(t => t.classList.add('hidden'));
+                    document.getElementById(tabId).classList.remove('hidden');
+                    document.getElementById(tabId).classList.add('tab-content-active');
+                    
+                    document.querySelectorAll('.tab-btn').forEach(b => {
+                        b.className = 'tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] btn-push hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors';
+                        const originalTab = b.getAttribute('data-tab');
+                        const iconInner = b.querySelector('i, svg');
+                        if (iconInner) {
+                            iconInner.className = iconInner.classList.contains('nav-svg-icon') ? 'nav-svg-icon w-6 h-6 text-slate-400 dark:text-slate-500 fill-current transition-colors' : `fa-solid ${tabIconsMap[originalTab]} text-[18px] text-slate-400 dark:text-slate-500 transition-colors`;
+                        }
+                        const label = b.querySelector('span');
+                        if (label) { label.className = 'text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1.5 tracking-wide'; }
+                    });
+
+                    btn.className = 'tab-btn relative flex flex-col items-center justify-center w-[60px] h-[60px] rounded-[20px] bg-white/90 dark:bg-slate-800/90 shadow-md border border-white/50 dark:border-slate-600/50 btn-push';
+                    if (icon) {
+                        icon.className = icon.classList.contains('nav-svg-icon') ? 'nav-svg-icon w-6 h-6 text-teal-500 fill-current drop-shadow-sm' : `fa-solid ${tabIconsMap[tabId]} text-[18px] drop-shadow-sm ${tabId === 'tab-budget' ? 'text-emerald-500' : tabId === 'tab-complaints' ? 'text-rose-500' : 'text-blue-500'}`;
+                    }
+                    const activeLabel = btn.querySelector('span');
+                    if (activeLabel) { activeLabel.className = 'text-[10px] font-black text-slate-900 dark:text-white mt-1.5 tracking-wide'; }
+                });
+            });
+
+            document.getElementById('subtab-btn-payments').addEventListener('click', () => {
+                document.getElementById('subtab-btn-payments').className = 'flex-1 py-2.5 text-[14px] font-black rounded-xl transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm border border-slate-100 dark:border-slate-700 btn-push';
+                document.getElementById('subtab-btn-expenses').className = 'flex-1 py-2.5 text-[14px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all btn-push hover:text-slate-900 dark:hover:text-white';
+                document.getElementById('subtab-payments').classList.remove('hidden');
+                document.getElementById('subtab-expenses').classList.add('hidden');
+            });
+            document.getElementById('subtab-btn-expenses').addEventListener('click', () => {
+                document.getElementById('subtab-btn-expenses').className = 'flex-1 py-2.5 text-[14px] font-black rounded-xl transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm border border-slate-100 dark:border-slate-700 btn-push';
+                document.getElementById('subtab-btn-payments').className = 'flex-1 py-2.5 text-[14px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all btn-push hover:text-slate-900 dark:hover:text-white';
+                document.getElementById('subtab-expenses').classList.remove('hidden');
+                document.getElementById('subtab-payments').classList.add('hidden');
+            });
+
+            document.getElementById('search-payments').addEventListener('input', renderPayments);
+            document.getElementById('load-more-payments-btn').addEventListener('click', () => { visiblePaymentsCount += 4; renderPayments(); });
+            document.getElementById('load-more-expenses-btn').addEventListener('click', () => { visibleExpensesCount += 4; renderExpenses(); });
+
+            document.querySelectorAll('.floor-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedFloor = btn.getAttribute('data-floor');
+                    document.querySelectorAll('.floor-btn').forEach(b => b.className = 'floor-btn flex-1 py-2 text-center text-[13px] font-bold rounded-xl text-slate-600 dark:text-slate-400 transition-all hover:bg-white/50 dark:hover:bg-slate-800/50');
+                    btn.className = 'floor-btn flex-1 py-2 text-center text-[13px] font-black rounded-xl transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-md border border-slate-100 dark:border-slate-700 scale-100';
+                    renderDuty();
+                });
+            });
+
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            document.getElementById('adminAuthBtn').addEventListener('click', () => {
+                if (isAdmin()) { document.getElementById('modal-confirm-logout').classList.remove('hidden'); }
+                else { document.getElementById('adminPasswordInput').value = ''; document.getElementById('modal-auth').classList.remove('hidden'); }
+            });
+            document.getElementById('auth-cancel-btn').addEventListener('click', () => document.getElementById('modal-auth').classList.add('hidden'));
+            document.getElementById('logout-cancel-btn').addEventListener('click', () => document.getElementById('modal-confirm-logout').classList.add('hidden'));
+
+            document.getElementById('auth-submit-btn').addEventListener('click', () => {
+                const pass = document.getElementById('adminPasswordInput').value;
+                if (pass === 'admin777') {
+                    currentAdminPassword = pass; localStorage.setItem('pnu_admin_session_v11', pass);
+                    document.getElementById('modal-auth').classList.add('hidden'); updateAdminUI(); renderAll();
+                    showToast('Авторизовано як адмін! 🔓');
+                } else { showToast('Невірний пароль! ❌', 'error'); }
+            });
+
+            document.getElementById('logout-confirm-btn').addEventListener('click', () => {
+                currentAdminPassword = null; localStorage.removeItem('pnu_admin_session_v11');
+                document.getElementById('modal-confirm-logout').classList.add('hidden'); updateAdminUI(); renderAll();
+                showToast('Ви вийшли з сесії адміна 🚪');
+            });
+
+            document.getElementById('lightbox-close-btn').addEventListener('click', () => { document.getElementById('lightbox-modal').classList.add('hidden'); });
+
+            document.getElementById('form-complaint').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const subject = document.getElementById('compSubject').value;
+                const desc = document.getElementById('compDesc').value;
+                const fileInput = document.getElementById('compPhotoFile');
+                
+                readMultipleFiles(fileInput, (base64Images) => {
+                    mockDB.complaints.unshift({
+                        id: "c_" + Date.now(), subject: subject, desc: desc,
+                        status: "В обробці ⏳", date: new Date().toISOString().split('T')[0], photosList: base64Images
+                    });
+                    syncDB(); renderAll();
+                    document.getElementById('form-complaint').reset();
+                    showToast('Звернення успішно надіслано! 🛠️');
+                });
+            });
+
+            document.getElementById('form-universal-crud').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const sheet = document.getElementById('crud-sheet-name').value;
+                const action = document.getElementById('crud-action-type').value;
+                const id = document.getElementById('crud-row-id').value;
+
+                function finalizeFormSubmit() {
+                    syncDB(); renderAll();
+                    document.getElementById('modal-crud-form').classList.add('hidden');
+                    showToast('Дані успішно збережено! 🎉');
+                }
+
+                if (sheet === 'goals') {
+                    const titleVal = document.getElementById('input-goal-title').value;
+                    const descVal = document.getElementById('input-goal-desc').value;
+                    const targetVal = Number(document.getElementById('input-goal-target').value);
+                    if (action === 'add') {
+                        mockDB.goals.unshift({ id: "g_" + Date.now(), title: titleVal, desc: descVal, target: targetVal });
+                    } else {
+                        let item = mockDB.goals.find(x => x.id === id);
+                        if (item) { item.title = titleVal; item.desc = descVal; item.target = targetVal; }
+                    }
+                    finalizeFormSubmit();
+                } else if (sheet === 'payments') {
+                    const roomVal = document.getElementById('input-pay-room').value;
+                    const nameVal = document.getElementById('input-pay-name').value;
+                    const amountVal = Number(document.getElementById('input-pay-amount').value);
+                    const dateVal = document.getElementById('input-pay-date').value;
+                    const statusVal = document.getElementById('input-pay-status').value;
+                    if (action === 'add') {
+                        mockDB.payments.unshift({ id: "p_" + Date.now(), room: roomVal, name: nameVal, amount: amountVal, date: dateVal, status: statusVal });
+                    } else {
+                        let item = mockDB.payments.find(x => x.id === id);
+                        if (item) { item.room = roomVal; item.name = nameVal; item.amount = amountVal; item.date = dateVal; item.status = statusVal; }
+                    }
+                    finalizeFormSubmit();
+                } else if (sheet === 'expenses') {
+                    const titleVal = document.getElementById('input-exp-title').value;
+                    const amountVal = Number(document.getElementById('input-exp-amount').value);
+                    const descVal = document.getElementById('input-exp-desc').value;
+                    const fileInput = document.getElementById('input-exp-files');
+                    readMultipleFiles(fileInput, (base64Images) => {
+                        mockDB.expenses.unshift({ id: "ex_" + Date.now(), title: titleVal, amount: amountVal, desc: descVal, date: new Date().toISOString().split('T')[0], photosList: base64Images });
+                        finalizeFormSubmit();
+                    });
+                } else if (sheet === 'events') {
+                    const titleVal = document.getElementById('input-ev-title').value;
+                    const descVal = document.getElementById('input-ev-desc').value;
+                    const dateVal = document.getElementById('input-ev-date').value;
+                    const timeVal = document.getElementById('input-ev-time').value;
+                    const locVal = document.getElementById('input-ev-location').value;
+                    if (action === 'add') {
+                        mockDB.events.unshift({ id: "ev_" + Date.now(), title: titleVal, desc: descVal, date: dateVal, time: timeVal, location: locVal });
+                    } else {
+                        let item = mockDB.events.find(x => x.id === id);
+                        if (item) { item.title = titleVal; item.desc = descVal; item.date = dateVal; item.time = timeVal; item.location = locVal; }
+                    }
+                    finalizeFormSubmit();
+                } else if (sheet === 'duty') {
+                    const floorVal = document.getElementById('input-duty-floor').value;
+                    const wingVal = document.getElementById('input-duty-wing').value;
+                    const roomVal = document.getElementById('input-duty-room').value;
+                    const dateVal = document.getElementById('input-duty-date').value;
+                    mockDB.duty.unshift({ id: "d_" + Date.now(), floor: floorVal, wing: wingVal, room: roomVal, date: dateVal });
+                    finalizeFormSubmit();
+                } else if (sheet === 'leaders') {
+                    const roleVal = document.getElementById('input-lead-role').value;
+                    const nameVal = document.getElementById('input-lead-name').value;
+                    const phoneVal = document.getElementById('input-lead-phone').value;
+                    const tgVal = document.getElementById('input-lead-tg').value;
+                    if (action === 'add') {
+                        mockDB.leaders.push({ id: "l_" + Date.now(), role: roleVal, name: nameVal, phone: phoneVal, tg: tgVal });
+                    } else {
+                        let item = mockDB.leaders.find(x => x.id === id);
+                        if (item) { item.role = roleVal; item.name = nameVal; item.phone = phoneVal; item.tg = tgVal; }
+                    }
+                    finalizeFormSubmit();
+                } else if (sheet === 'complaints') {
+                    const subVal = document.getElementById('input-comp-subject').value;
+                    const descVal = document.getElementById('input-comp-desc').value;
+                    const statVal = document.getElementById('input-comp-status').value;
+                    let item = mockDB.complaints.find(x => x.id === id);
+                    if (item) { item.subject = subVal; item.desc = descVal; item.status = statVal; }
+                    finalizeFormSubmit();
+                } else if (sheet === 'info' || sheet === 'rules') {
+                    mockDB[sheet].content = document.getElementById('input-html-content').value;
+                    finalizeFormSubmit();
+                }
+            });
+
+            document.getElementById('admin-add-goal-btn').addEventListener('click', () => openCrudForm('goals', 'add'));
+            document.getElementById('admin-add-payment-btn').addEventListener('click', () => openCrudForm('payments', 'add'));
+            document.getElementById('admin-add-expense-btn').addEventListener('click', () => openCrudForm('expenses', 'add'));
+            document.getElementById('admin-add-event-btn').addEventListener('click', () => openCrudForm('events', 'add'));
+            document.getElementById('admin-add-duty-btn').addEventListener('click', () => openCrudForm('duty', 'add'));
+            document.getElementById('admin-add-leader-btn').addEventListener('click', () => openCrudForm('leaders', 'add'));
+            document.getElementById('admin-edit-info-btn').addEventListener('click', () => openCrudForm('info', 'edit'));
+            document.getElementById('admin-edit-rules-btn').addEventListener('click', () => openCrudForm('rules', 'edit'));
+
+            document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', () => {
+                document.getElementById('modal-crud-form').classList.add('hidden');
+            }));
+
+            updateAdminUI();
+            renderAll();
+        });
+    </script>
+</body>
+</html>
