@@ -1,0 +1,13 @@
+{
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
+  "crons": [
+    {
+      "path": "/api/cron-duty-reminder",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron-poll-close",
+      "schedule": "*/15 * * * *"
+    }
+  ]
+}
